@@ -1,10 +1,11 @@
 import React, {useCallback} from 'react';
 import {FilterValuesType} from '../App';
-import {AddItemForm} from "./AddItemFormPropsType";
-import {EditableSpan} from "./EditableSpan";
 import {Button, IconButton} from "@material-ui/core";
 import {Delete} from "@material-ui/icons";
+import {EditableSpan} from "./EditableSpan";
 import {Task} from "./Task";
+import {AddItemForm} from "./AddItemFormPropsType";
+
 
 
 export type TaskType = {

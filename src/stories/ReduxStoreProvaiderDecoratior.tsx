@@ -31,8 +31,6 @@ const initialGlobalState = {
 
 export const storyBookStore = createStore(rootReducer, initialGlobalState as AppRootStateType);
 
-
-
 export const ReduxStoreProvaiderDecoratior=(storyFn:()=>React.ReactNode) => {
     return <Provider store={storyBookStore}>{storyFn()}</Provider>
 }
