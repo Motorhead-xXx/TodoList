@@ -1,36 +1,34 @@
-import React, {ChangeEvent, KeyboardEvent, useState} from "react";
+import React, {ChangeEvent, KeyboardEvent, KeyboardEventHandler, useState} from 'react';
 
-export type EditableSpanType = {
-    title: string
+type EditableSpanPropsType = {
+    value: string
     onChange: (newValue: string) => void
 }
 
-export const EditableSpan = (props: EditableSpanType) => {
-    let [editMode, setEditMode] = useState<boolean>(false)
-    let [title, setTitle] = useState("")
+export const EditableSpan = React.memo(function (props: EditableSpanPropsType) {
+    let [editMode, setEditMode] = useState(false);
+    let [title, setTitle] = useState(props.value);
 
-    const activateSpanMode = () => {
-        setEditMode(true)
-        setTitle(props.title)
+    const activateEditMode = () => {
+        setEditMode(true);
+        setTitle(props.value);
     }
 
-    const activateInputMode = () => {
-        setEditMode(false)
-        props.onChange(title);
-
-    }
-
-    const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+    const keyActivateMode = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.charCode === 13) {
-            activateInputMode();
+            activateViewMode();
         }
     }
 
-    const onChangeTitleHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        setTitle(e.currentTarget.value)
-
+    const activateViewMode = () => {
+        setEditMode(false);
+        props.onChange(title);
     }
+    const changeTitle = (e: ChangeEvent<HTMLInputElement>) => {
+        setTitle(e.currentTarget.value)
+    }
+
     return editMode
-        ? <input onKeyPress={onKeyPressHandler} value={title} onBlur={activateInputMode} onChange={onChangeTitleHandler} autoFocus/>
-        : <span onDoubleClick={activateSpanMode}>{props.title}</span>
-}
+        ? <input value={title} onChange={changeTitle} autoFocus onBlur={activateViewMode} onKeyPress={keyActivateMode} />
+        : <span onDoubleClick={activateEditMode}>{props.value}</span>
+});

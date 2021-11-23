@@ -28,5 +28,5 @@ export const EditableSpanExample = Template.bind({});
 
 
 EditableSpanExample.args = {
-    onChange: action("Value EditableSpan changed")
+    onChange: action("Value EditableSpan changed"),
 };
