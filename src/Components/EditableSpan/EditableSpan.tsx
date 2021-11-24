@@ -1,8 +1,9 @@
-import React, {ChangeEvent, KeyboardEvent, KeyboardEventHandler, useState} from 'react';
+import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 
 type EditableSpanPropsType = {
     value: string
     onChange: (newValue: string) => void
+    disabled?:boolean
 }
 
 export const EditableSpan = React.memo(function (props: EditableSpanPropsType) {
@@ -10,6 +11,9 @@ export const EditableSpan = React.memo(function (props: EditableSpanPropsType) {
     let [title, setTitle] = useState(props.value);
 
     const activateEditMode = () => {
+        if (props.disabled){
+            return
+        }
         setEditMode(true);
         setTitle(props.value);
     }
@@ -29,6 +33,6 @@ export const EditableSpan = React.memo(function (props: EditableSpanPropsType) {
     }
 
     return editMode
-        ? <input value={title} onChange={changeTitle} autoFocus onBlur={activateViewMode} onKeyPress={keyActivateMode} />
+        ? <input value={title} onChange={changeTitle} autoFocus onBlur={activateViewMode} onKeyPress={keyActivateMode}/>
         : <span onDoubleClick={activateEditMode}>{props.value}</span>
 });
