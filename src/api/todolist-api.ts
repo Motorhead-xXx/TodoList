@@ -54,12 +54,19 @@ type GetTasksResponse = {
     items: TaskType[]
 }
 
+export type LoginParamsType = {
+    email: string
+    password: string
+    rememberMe: boolean
+    captcha?: string
+}
+
 
 const instance = axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.1/',
     withCredentials: true,
     headers: {
-        "API-KEY": "8cfe719b-61ef-4519-9519-1e1d9dd44f52"
+        "API-KEY": "21d990e0-eae8-42bd-a185-362e1cc41b0a"
     }
 })
 
@@ -80,15 +87,26 @@ export const todolistsAPI = {
 
 export const tasksAPI = {
     getTasks(todolistId: string) {
-        return instance.get<GetTasksResponse>(`todo-lists/${todolistId}/tasks`);
+        return instance.get<GetTasksResponse>(`todo-lists/${todolistId}/tasks`)
     },
     createTask(todolistId: string, title: string) {
-        return instance.post<{ title: string }, AxiosResponse<ResponseType<{ item: TaskType }>>>(`todo-lists/${todolistId}/tasks`, {title});
+        return instance.post<{ title: string }, AxiosResponse<ResponseType<{ item: TaskType }>>>(`todo-lists/${todolistId}/tasks`, {title})
     },
     deleteTask(todolistId: string, taskId: string) {
-        return instance.delete<ResponseType>(`todo-lists/${todolistId}/tasks/${taskId}`);
+        return instance.delete<ResponseType>(`todo-lists/${todolistId}/tasks/${taskId}`)
     },
-    updateTask(todolistId: string, taskID: string, model:UpdateTaskModelType) {
+    updateTask(todolistId: string, taskID: string, model: UpdateTaskModelType) {
         return instance.put<UpdateTaskModelType, AxiosResponse<ResponseType<{ item: TaskType }>>>(`todo-lists/${todolistId}/tasks/${taskID}`, model)
+    }}
+
+export const authAPI = {
+    login(data: LoginParamsType) {
+        return instance.post<ResponseType<{userId?: number}>>('auth/login', data);
+    },
+    logout() {
+        return instance.delete<ResponseType<{userId?: number}>>('auth/login');
+    },
+    me() {
+       return  instance.get<ResponseType<{id: number; email: string; login: string}>>('auth/me');
     }
 }

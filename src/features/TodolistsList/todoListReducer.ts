@@ -71,7 +71,7 @@ export const getTodolistThunkTC = (): AppThunkType => async dispatch => {
 export const removeTodolistTC = (id: string): AppThunkType => async dispatch => {
     dispatch(actionApp.setAppStatus("loading"));
     dispatch(actionTodo.changeTodolistEntityStatusAC(id,"loading"))
-    const res = await todolistsAPI.deleteTodolist(id);
+    await todolistsAPI.deleteTodolist(id);
     dispatch(actionTodo.removeTodolistAC(id));
     dispatch(actionApp.setAppStatus("succeeded"));
 };
@@ -85,7 +85,7 @@ export const createTodolistTC = (title: string): AppThunkType => async dispatch 
 export const updateTitleTodolistTC = (id: string, title: string): AppThunkType => async dispatch => {
     dispatch(actionApp.setAppStatus("loading"));
     dispatch(actionTodo.changeTodolistEntityStatusAC(id,"loading"))
-    const res = await todolistsAPI.updateTodolistTitle(id, title)
+    await todolistsAPI.updateTodolistTitle(id, title)
     dispatch(actionTodo.changeTodolistTitleAC(id, title))
     dispatch(actionApp.setAppStatus("succeeded"));
     dispatch(actionTodo.changeTodolistEntityStatusAC(id,"succeeded"))

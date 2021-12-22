@@ -7,19 +7,21 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../app/store";
 import {TasksStateType} from "./tasksReducer";
 import {RequestStatusType} from "../../app/app-reduser";
+import {Navigate} from "react-router-dom";
 
 type PropsType = {
     demo?: boolean
 }
 
-export const TodolistList = ({demo=false,...props}:PropsType) => {
+export const TodolistList = React.memo(({demo=false,...props}:PropsType) => {
     const tasks = useSelector<AppRootStateType, TasksStateType>(state => state.tasks)
     const todolists = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.todoLists)
     const status = useSelector<AppRootStateType, RequestStatusType>(state => state.app.status)
+    const isLoggedIn = useSelector<AppRootStateType, boolean>(state=>state.auth.isLoggedIn)
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if(demo){
+        if(demo || !isLoggedIn){
             return
         }
         dispatch(getTodolistThunkTC())
@@ -28,6 +30,10 @@ export const TodolistList = ({demo=false,...props}:PropsType) => {
     const addTodolist = useCallback((title: string) => {
         dispatch(createTodolistTC(title));
     }, []);
+
+    if (!isLoggedIn){
+        return <Navigate to="/login"/>
+    }
 
     return <>
         <Grid container style={{padding: '20px'}}>
@@ -52,6 +58,4 @@ export const TodolistList = ({demo=false,...props}:PropsType) => {
             }
         </Grid>
     </>
-}
-
-export default TodolistList;
+})

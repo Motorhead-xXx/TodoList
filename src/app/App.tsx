@@ -1,20 +1,41 @@
-import React from 'react'
 import './App.css';
-import {AppBar, Button, Container, IconButton, Toolbar} from "@material-ui/core";
+import {AppBar, Button, CircularProgress, Container, IconButton, Toolbar} from "@material-ui/core";
 import {Menu} from "@material-ui/icons";
 import {LinearProgress} from "@mui/material";
-import TodolistList from "../features/TodolistsList/TodolistList";
 import {SnackbarError} from "../components/ErrorSnackbar/ErrorSnackbar";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./store";
-import {RequestStatusType} from "./app-reduser";
+import {initializeAppTC, RequestStatusType} from "./app-reduser";
+import {Login} from "../features/login";
+import {Navigate, Route, Routes} from "react-router-dom";
+import {logoutTC} from "../features/authReducer";
+import {useCallback, useEffect} from "react";
+import {TodolistList} from "../features/TodolistsList/TodolistList";
 
 type PropsType = {
     demo?: boolean
 }
 
-const App = ({demo=false,...props}:PropsType) => {
+const App = ({demo = false, ...props}: PropsType) => {
     const status = useSelector<AppRootStateType, RequestStatusType>(state => state.app.status)
+    const isInitialized = useSelector<AppRootStateType, boolean>((state) => state.app.initialized)
+    const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.auth.isLoggedIn)
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(initializeAppTC())
+    }, [])
+
+    const logoutHandler = useCallback(() => {
+        dispatch(logoutTC())
+    }, [])
+
+    if (!isInitialized) {
+        return <div
+            style={{position: 'fixed', top: '30%', textAlign: 'center', width: '100%'}}>
+            <CircularProgress/>
+        </div>
+    }
 
     return (
         <div className="App">
@@ -24,12 +45,17 @@ const App = ({demo=false,...props}:PropsType) => {
                     <IconButton edge="start" color="inherit" aria-label="menu">
                         <Menu/>
                     </IconButton>
-                    <Button variant={"outlined"} color="inherit">Login</Button>
+                    {isLoggedIn && <Button color="inherit" variant={"outlined"} onClick={logoutHandler}>Log out</Button>}
                 </Toolbar>
             </AppBar>
-            {status === "loading" && <LinearProgress sx={{position:"relative"}} color={"warning"} />}
+            {status === "loading" && <LinearProgress sx={{position: "relative"}} color={"warning"}/>}
             <Container fixed>
-                <TodolistList demo={demo}/>
+                <Routes>
+                    <Route path={"/"} element={<TodolistList demo={demo}/>}/>
+                    <Route path={"login"} element={<Login/>}/>
+                    <Route path="/404" element={<h1>404: PAGE NOT FOUND </h1>}/>
+                    <Route path="*" element={<Navigate to="/404"/>}/>
+                </Routes>
             </Container>
         </div>
     );

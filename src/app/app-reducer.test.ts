@@ -5,12 +5,13 @@ let startState: AppInitialStateType;
 beforeEach(() => {
     startState = {
         errorMessage: null,
-        status: "loading"
+        status: "loading",
+        initialized: false,
     }
 });
 
 test('correct error message', () => {
-    const endState = appReducer(startState, actionApp.setError('some error'))
+    const endState = appReducer(startState, actionApp.setAppError('some error'))
     expect(endState.errorMessage).toBe('some error');
 });
 
