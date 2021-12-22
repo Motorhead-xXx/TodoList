@@ -1,22 +1,20 @@
 {
   "files": {
-    "main.css": "/TodoList/static/css/main.cdee5b91.chunk.css",
-    "main.js": "/TodoList/static/js/main.895c5874.chunk.js",
-    "main.js.map": "/TodoList/static/js/main.895c5874.chunk.js.map",
-    "runtime-main.js": "/TodoList/static/js/runtime-main.b918c17e.js",
-    "runtime-main.js.map": "/TodoList/static/js/runtime-main.b918c17e.js.map",
-    "static/js/2.e6a12be9.chunk.js": "/TodoList/static/js/2.e6a12be9.chunk.js",
-    "static/js/2.e6a12be9.chunk.js.map": "/TodoList/static/js/2.e6a12be9.chunk.js.map",
+    "main.css": "/TodoList/static/css/main.176d0404.chunk.css",
+    "main.js": "/TodoList/static/js/main.bb84d44f.chunk.js",
+    "main.js.map": "/TodoList/static/js/main.bb84d44f.chunk.js.map",
+    "runtime-main.js": "/TodoList/static/js/runtime-main.63bf3d30.js",
+    "runtime-main.js.map": "/TodoList/static/js/runtime-main.63bf3d30.js.map",
+    "static/js/2.a5b2ddc3.chunk.js": "/TodoList/static/js/2.a5b2ddc3.chunk.js",
+    "static/js/2.a5b2ddc3.chunk.js.map": "/TodoList/static/js/2.a5b2ddc3.chunk.js.map",
     "index.html": "/TodoList/index.html",
-    "precache-manifest.6165520cd2ebe6bf364cc121c9363a78.js": "/TodoList/precache-manifest.6165520cd2ebe6bf364cc121c9363a78.js",
-    "service-worker.js": "/TodoList/service-worker.js",
-    "static/css/main.cdee5b91.chunk.css.map": "/TodoList/static/css/main.cdee5b91.chunk.css.map",
-    "static/js/2.e6a12be9.chunk.js.LICENSE.txt": "/TodoList/static/js/2.e6a12be9.chunk.js.LICENSE.txt"
+    "static/css/main.176d0404.chunk.css.map": "/TodoList/static/css/main.176d0404.chunk.css.map",
+    "static/js/2.a5b2ddc3.chunk.js.LICENSE.txt": "/TodoList/static/js/2.a5b2ddc3.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.b918c17e.js",
-    "static/js/2.e6a12be9.chunk.js",
-    "static/css/main.cdee5b91.chunk.css",
-    "static/js/main.895c5874.chunk.js"
+    "static/js/runtime-main.63bf3d30.js",
+    "static/js/2.a5b2ddc3.chunk.js",
+    "static/css/main.176d0404.chunk.css",
+    "static/js/main.bb84d44f.chunk.js"
   ]
 }
