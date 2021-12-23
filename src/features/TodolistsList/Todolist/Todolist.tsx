@@ -2,7 +2,7 @@ import React, {useCallback, useEffect} from 'react'
 import {Delete} from "@material-ui/icons";
 import {EditableSpan} from "../../../components/EditableSpan/EditableSpan";
 import {Task} from "./Task/Task";
-import {actionTodo, FilterValuesType, removeTodolistTC, TodolistDomainType, updateTitleTodolistTC} from "../todoListReducer";
+import {changeTodolistFilter, FilterValuesType, removeTodolistTC, TodolistDomainType, updateTitleTodolistTC} from "../todoListReducer";
 import {Button, IconButton} from "@material-ui/core";
 import {TaskStatuses, TaskType} from "../../../api/todolist-api";
 import {useDispatch} from "react-redux";
@@ -25,7 +25,7 @@ export const Todolist = React.memo(({demo = false, ...props}: PropsType) => {
     }, [])
 
     const changeFilter = useCallback(function (value: FilterValuesType, todolistId: string) {
-        dispatch(actionTodo.changeTodolistFilterAC(todolistId, value));
+        dispatch(changeTodolistFilter({todolistId, filter: value}));
     }, []);
 
     const changeTodolistTitle = useCallback(function (title: string) {
@@ -62,7 +62,7 @@ export const Todolist = React.memo(({demo = false, ...props}: PropsType) => {
         <AddItemForm addItem={addTask} disabled={props.todolist.entityStatus === "loading"}/>
         <div>
             {
-                tasksForTodolist.map(t => <Task key={t.id} task={t}
+                tasksForTodolist.map((t) => <Task key={t.id} task={t}
                                                 todolist={props.todolist}
                 />)
             }

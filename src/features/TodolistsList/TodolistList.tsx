@@ -41,7 +41,7 @@ export const TodolistList = React.memo(({demo=false,...props}:PropsType) => {
         </Grid>
         <Grid container spacing={3}>
             {
-                todolists.map(tl => {
+                todolists.map((tl) => {
 
                     let allTodolistTasks = tasks[tl.id];
 
