@@ -1,6 +1,6 @@
-import {actionApp, AppInitialStateType, appReducer} from "./app-reduser";
+import {appReducer, InitialStateType, setAppError, setAppStatus} from "../../app/app-reduser";
 
-let startState: AppInitialStateType;
+let startState: InitialStateType;
 
 beforeEach(() => {
     startState = {
@@ -11,11 +11,11 @@ beforeEach(() => {
 });
 
 test('correct error message', () => {
-    const endState = appReducer(startState, actionApp.setAppError('some error'))
+    const endState = appReducer(startState, setAppError({error:'some error'}))
     expect(endState.errorMessage).toBe('some error');
 });
 
 test('correct status should be set ', () => {
-    const endState = appReducer(startState, actionApp.setAppStatus('loading'))
+    const endState = appReducer(startState, setAppStatus({status:'loading'}))
     expect(endState.status).toBe('loading');
 });

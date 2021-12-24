@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./store";
 import {initializeAppTC, RequestStatusType} from "./app-reduser";
 import {Login} from "../features/login";
-import {Navigate, Route, Routes} from "react-router-dom";
+import {HashRouter, Navigate, Route, Routes} from "react-router-dom";
 import {logoutTC} from "../features/authReducer";
 import {useCallback, useEffect} from "react";
 import {TodolistList} from "../features/TodolistsList/TodolistList";
@@ -16,19 +16,21 @@ type PropsType = {
     demo?: boolean
 }
 
-const App = ({demo = false, ...props}: PropsType) => {
+const App = ({demo = false}: PropsType) => {
     const status = useSelector<AppRootStateType, RequestStatusType>(state => state.app.status)
     const isInitialized = useSelector<AppRootStateType, boolean>((state) => state.app.initialized)
     const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.auth.isLoggedIn)
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(initializeAppTC())
-    }, [])
+        if(!demo){
+            dispatch(initializeAppTC())
+        }
+    }, [dispatch])
 
     const logoutHandler = useCallback(() => {
         dispatch(logoutTC())
-    }, [])
+    }, [dispatch])
 
     if (!isInitialized) {
         return <div
@@ -38,17 +40,15 @@ const App = ({demo = false, ...props}: PropsType) => {
     }
 
     return (
+
         <div className="App">
             <SnackbarError/>
             <AppBar style={{backgroundColor: "green", color: "white"}} color={"transparent"} position="static">
                 <Toolbar>
-                    <IconButton edge="start" color="inherit" aria-label="menu">
-                        <Menu/>
-                    </IconButton>
                     {isLoggedIn && <Button color="inherit" variant={"outlined"} onClick={logoutHandler}>Log out</Button>}
                 </Toolbar>
             </AppBar>
-            {status === "loading" && <LinearProgress sx={{position: "relative"}} color={"warning"}/>}
+            <div style={{height:"3px"}}>{status === "loading" && <LinearProgress sx={{position: "relative"}} color={"warning"}/>}</div>
             <Container fixed>
                 <Routes>
                     <Route path={"/"} element={<TodolistList demo={demo}/>}/>
