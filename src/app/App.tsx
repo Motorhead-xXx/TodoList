@@ -48,7 +48,7 @@ const App = ({demo = false, ...props}: PropsType) => {
                     {isLoggedIn && <Button color="inherit" variant={"outlined"} onClick={logoutHandler}>Log out</Button>}
                 </Toolbar>
             </AppBar>
-            {status === "loading" && <LinearProgress sx={{position: "relative"}} color={"warning"}/>}
+            <div style={{height:"3px"}}>{status === "loading" && <LinearProgress sx={{position: "relative"}} color={"warning"}/>}</div>
             <Container fixed>
                 <Routes>
                     <Route path={"/"} element={<TodolistList demo={demo}/>}/>

@@ -7,7 +7,7 @@ import {Button, IconButton} from "@material-ui/core";
 import {TaskStatuses, TaskType} from "../../../api/todolist-api";
 import {useDispatch} from "react-redux";
 import {AddItemForm} from "../../../components/AddItemFormPropsType/AddItemForm";
-import {createTaskTC, fetchTaskTC} from "../tasksReducer";
+import {createTask, fetchTasks} from "../tasksReducer";
 
 type PropsType = {
     todolist: TodolistDomainType
@@ -21,7 +21,7 @@ export const Todolist = React.memo(({demo = false, ...props}: PropsType) => {
         if (demo) {
             return
         }
-        dispatch(fetchTaskTC(props.todolist.id))
+        dispatch(fetchTasks(props.todolist.id))
     }, [])
 
     const changeFilter = useCallback(function (value: FilterValuesType, todolistId: string) {
@@ -37,7 +37,7 @@ export const Todolist = React.memo(({demo = false, ...props}: PropsType) => {
     }, []);
 
     const addTask = useCallback(function (title: string) {
-        dispatch(createTaskTC(props.todolist.id, title));
+        dispatch(createTask({todolistId: props.todolist.id, title}));
     }, [props.todolist.id]);
 
     const onAllClickHandler = useCallback(() => changeFilter('all', props.todolist.id), [props.todolist.id, changeFilter])
