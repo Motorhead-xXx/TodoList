@@ -6,12 +6,12 @@ import FormGroup from '@mui/material/FormGroup';
 import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import {loginTC} from "./authReducer";
-import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "../app/store";
+import {login} from "./authReducer";
+import {useSelector} from "react-redux";
+import {AppRootStateType, useAppDispatch} from "../app/store";
 import {Navigate} from "react-router-dom";
-import {useFormik} from "formik";
-import { LoginParamsType } from '../api/todolist-api';
+import {FormikHelpers, useFormik} from "formik";
+import {LoginParamsType} from '../api/todolist-api';
 
 
 type FormikErrorType = {
@@ -19,10 +19,16 @@ type FormikErrorType = {
     password?: string
     rememberMe?: boolean
 }
+type FormikValueType = {
+    email: string
+    password: string
+    rememberMe: boolean
+}
+
 
 export const Login = () => {
     const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.auth.isLoggedIn)
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
 
     const formik = useFormik({
@@ -31,7 +37,7 @@ export const Login = () => {
             password: '',
             rememberMe: false
         },
-        validate: (values: { email: string; password: string}) => {
+        validate: (values: { email: string; password: string }) => {
             const errors: FormikErrorType = {};
             if (!values.email) {
                 errors.email = 'Required field';
@@ -45,9 +51,15 @@ export const Login = () => {
             }
             return errors;
         },
-        onSubmit: (values: LoginParamsType) => {
-            formik.resetForm();
-            dispatch(loginTC(values))
+        onSubmit: async (values: LoginParamsType, formikHelpers: FormikHelpers<FormikValueType>) => {
+            const resultAction = await dispatch(login(values));
+
+            if (login.rejected.match(resultAction)) {
+                if (resultAction.payload?.fieldsErrors?.length) {
+                    const error = resultAction.payload?.fieldsErrors[0];
+                    formikHelpers.setFieldError(error.field, error.message)
+                }
+            }
         },
     })
 
@@ -67,8 +79,8 @@ export const Login = () => {
                                 </a>
                             </p>
                             <p style={{fontWeight: "bold"}}>or use common test account credentials:</p>
-                            <p style={{fontWeight: "bold"}}>Email: free@samuraijs.com</p>
-                            <p style={{fontWeight: "bold"}}>Password: free</p>
+                            <p style={{fontWeight: "bold"}}>Email: <span style={{color: "orange"}}>free@samuraijs.com</span></p>
+                            <p style={{fontWeight: "bold"}}>Password: <span style={{color: "orange"}}>free</span></p>
                         </FormLabel>
                         <form onSubmit={formik.handleSubmit}>
                             <FormGroup>
@@ -77,14 +89,14 @@ export const Login = () => {
                                     label="Email"
                                     margin="normal"
                                     {...formik.getFieldProps('email')}/>
-                                {formik.touched.email && formik.errors.email ? <div style={{color: "red"}}>{formik.errors.email}</div> : null}
+                                {formik.touched.email || formik.errors.email ? <div style={{color: "red"}}>{formik.errors.email}</div> : null}
 
                                 <TextField color={"success"} type="password" label="Password"
                                            margin="normal"
                                            {...formik.getFieldProps('password')}
                                 />
-                                {formik.touched.password && formik.errors.password ? <div style={{color: "red"}}>{formik.errors.password}</div> : null}
-                                <FormControlLabel label={'Remember me'} control={<Checkbox    color={"success"} onChange={formik.handleChange}
+                                {formik.touched.password || formik.errors.password ? <div style={{color: "red"}}>{formik.errors.password}</div> : null}
+                                <FormControlLabel label={'Remember me'} control={<Checkbox color={"success"} onChange={formik.handleChange}
                                                                                            checked={formik.values.rememberMe}
                                                                                            name={"rememberMe"}/>}/>
                                 <Button type={'submit'} variant={'contained'} color={'success'}>
