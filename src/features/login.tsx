@@ -56,8 +56,8 @@ export const Login = () => {
 
             if (login.rejected.match(resultAction)) {
                 if (resultAction.payload?.fieldsErrors?.length) {
-                    const error = resultAction.payload?.fieldsErrors[0];
-                    formikHelpers.setFieldError(error.field, error.message)
+                    const error = resultAction.payload.fieldsErrors[0];
+                    formikHelpers.setFieldError(error.field,error.error)
                 }
             }
         },
@@ -88,14 +88,15 @@ export const Login = () => {
                                     color={"success"}
                                     label="Email"
                                     margin="normal"
+                                    error={formik.touched.email && Boolean(formik.errors.email)}
                                     {...formik.getFieldProps('email')}/>
-                                {formik.touched.email || formik.errors.email ? <div style={{color: "red"}}>{formik.errors.email}</div> : null}
+                                     {formik.errors.email ? <div style={{color: "red"}}>{formik.errors.email}</div> : null}
 
-                                <TextField color={"success"} type="password" label="Password"
+                                <TextField color={"success"} type="password" label="Password" error={formik.touched.password && Boolean(formik.errors.password)}
                                            margin="normal"
                                            {...formik.getFieldProps('password')}
                                 />
-                                {formik.touched.password || formik.errors.password ? <div style={{color: "red"}}>{formik.errors.password}</div> : null}
+                                {formik.touched.password && formik.errors.password ? <div style={{color: "red"}}>{formik.errors.password}</div> : null}
                                 <FormControlLabel label={'Remember me'} control={<Checkbox color={"success"} onChange={formik.handleChange}
                                                                                            checked={formik.values.rememberMe}
                                                                                            name={"rememberMe"}/>}/>

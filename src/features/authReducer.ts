@@ -1,23 +1,22 @@
 import {handleServerAppError, handleServerNetworkError} from "../utils/error-utils";
 import {authAPI, FieldErrorType, LoginParamsType} from "../api/todolist-api";
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {Dispatch} from "redux";
-import {setAppStatus} from "../app/app-reduser";
+import {setAppStatus} from "../app/appReduser";
 import {AxiosError} from "axios";
 
 
-export const login = createAsyncThunk<{ isLoggedIn: boolean },LoginParamsType, {
-    rejectValue:{errors: Array<string>, fieldsErrors?: Array<FieldErrorType>}}
->('auth/login', async (param, {dispatch, rejectWithValue}) => {
+export const login = createAsyncThunk<undefined , LoginParamsType, {
+    rejectValue: { errors: Array<string>, fieldsErrors?: Array<FieldErrorType> }
+}>('auth/login', async (param, {dispatch, rejectWithValue}) => {
     dispatch(setAppStatus({status: 'loading'}))
     let res = await authAPI.login(param);
     try {
         if (res.data.resultCode === 0) {
             dispatch(setAppStatus({status: 'succeeded'}))
-            return {isLoggedIn: true}
+            return
         } else {
             handleServerAppError(res.data, dispatch);
-            return rejectWithValue({errors: res.data.messages})
+            return rejectWithValue({errors: res.data.messages, fieldsErrors: res.data.fieldsErrors})
         }
     } catch (error) {
         let err = error as AxiosError
@@ -26,13 +25,13 @@ export const login = createAsyncThunk<{ isLoggedIn: boolean },LoginParamsType, {
     }
 })
 
-export const logout = createAsyncThunk('auth/logout', async (param, {dispatch,rejectWithValue}) => {
+export const logout = createAsyncThunk('auth/logout', async (param, {dispatch, rejectWithValue}) => {
     dispatch(setAppStatus({status: 'loading'}))
     try {
         const res = await authAPI.logout()
         if (res.data.resultCode === 0) {
             dispatch(setAppStatus({status: 'succeeded'}))
-            return {isLoggedIn: false}
+            return
         } else {
             handleServerAppError(res.data, dispatch)
             return rejectWithValue({errors: res.data.messages, fieldsErrors: res.data.fieldsErrors})
@@ -41,6 +40,8 @@ export const logout = createAsyncThunk('auth/logout', async (param, {dispatch,re
         let err = error as AxiosError
         handleServerNetworkError({message: err.message}, dispatch);
         return rejectWithValue({errors: [err.message], fieldsErrors: undefined})
+
+
     }
 })
 
@@ -57,10 +58,10 @@ export const slice = createSlice({
     extraReducers: (builder => {
         builder
             .addCase(login.fulfilled, (state, action) => {
-                state.isLoggedIn = action.payload.isLoggedIn
+                state.isLoggedIn = true
             })
             .addCase(logout.fulfilled, (state, action) => {
-                state.isLoggedIn = action.payload.isLoggedIn
+                state.isLoggedIn = false
             })
 
     })
@@ -68,19 +69,3 @@ export const slice = createSlice({
 
 export const {setIsLoggedIn} = slice.actions
 export const authReducer = slice.reducer;
-
-export const logoutTC = () => (dispatch: Dispatch) => {
-    dispatch(setAppStatus({status: 'loading'}))
-    authAPI.logout()
-        .then(res => {
-            if (res.data.resultCode === 0) {
-                dispatch(setIsLoggedIn({value: false}))
-                dispatch(setAppStatus({status: 'succeeded'}))
-            } else {
-                handleServerAppError(res.data, dispatch)
-            }
-        })
-        .catch((error) => {
-            handleServerNetworkError(error, dispatch)
-        })
-}

@@ -1,14 +1,13 @@
 import './App.css';
-import {AppBar, Button, CircularProgress, Container, IconButton, Toolbar} from "@material-ui/core";
-import {Menu} from "@material-ui/icons";
+import {AppBar, Button, CircularProgress, Container, Toolbar} from "@material-ui/core";
 import {LinearProgress} from "@mui/material";
 import {SnackbarError} from "../components/ErrorSnackbar/ErrorSnackbar";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./store";
-import {initializeAppTC, RequestStatusType} from "./app-reduser";
+import {initializeApp, RequestStatusType} from "./appReduser";
 import {Login} from "../features/login";
-import {HashRouter, Navigate, Route, Routes} from "react-router-dom";
-import {logoutTC} from "../features/authReducer";
+import {Navigate, Route, Routes} from "react-router-dom";
+import {logout} from "../features/authReducer";
 import {useCallback, useEffect} from "react";
 import {TodolistList} from "../features/TodolistsList/TodolistList";
 
@@ -24,12 +23,12 @@ const App = ({demo = false}: PropsType) => {
 
     useEffect(() => {
         if(!demo){
-            dispatch(initializeAppTC())
+            dispatch(initializeApp())
         }
     }, [dispatch])
 
     const logoutHandler = useCallback(() => {
-        dispatch(logoutTC())
+        dispatch(logout())
     }, [dispatch])
 
     if (!isInitialized) {

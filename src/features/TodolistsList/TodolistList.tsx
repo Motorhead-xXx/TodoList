@@ -2,20 +2,20 @@ import {Grid, Paper} from "@material-ui/core";
 import {AddItemForm} from "../../components/AddItemFormPropsType/AddItemForm";
 import {Todolist} from "./Todolist/Todolist";
 import React, {useCallback, useEffect} from "react";
-import {createTodolistTC, getTodolistThunkTC, TodolistDomainType} from "./todoListReducer";
+import {createTodolist, fetchTodolist, TodolistDomainType} from "./todoListReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../app/store";
 import {TasksStateType} from "./tasksReducer";
-import {RequestStatusType} from "../../app/app-reduser";
+import {RequestStatusType} from "../../app/appReduser";
 import {Navigate} from "react-router-dom";
 
 type PropsType = {
     demo?: boolean
 }
 
-export const TodolistList = React.memo(({demo=false,...props}:PropsType) => {
+export const TodolistList = React.memo(({demo=false}:PropsType) => {
     const tasks = useSelector<AppRootStateType, TasksStateType>(state => state.tasks)
-    const todolists = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.todoLists)
+    const todoLists = useSelector<AppRootStateType, TodolistDomainType[]>(state => state.todoLists)
     const status = useSelector<AppRootStateType, RequestStatusType>(state => state.app.status)
     const isLoggedIn = useSelector<AppRootStateType, boolean>(state=>state.auth.isLoggedIn)
     const dispatch = useDispatch();
@@ -24,11 +24,11 @@ export const TodolistList = React.memo(({demo=false,...props}:PropsType) => {
         if(demo || !isLoggedIn){
             return
         }
-        dispatch(getTodolistThunkTC())
+        dispatch(fetchTodolist())
     }, [])
 
     const addTodolist = useCallback((title: string) => {
-        dispatch(createTodolistTC(title));
+        dispatch(createTodolist(title));
     }, []);
 
     if (!isLoggedIn){
@@ -41,7 +41,7 @@ export const TodolistList = React.memo(({demo=false,...props}:PropsType) => {
         </Grid>
         <Grid container spacing={3}>
             {
-                todolists.map((tl) => {
+                todoLists.map((tl) => {
 
                     let allTodolistTasks = tasks[tl.id];
 

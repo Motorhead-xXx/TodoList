@@ -1,7 +1,7 @@
 import {TaskPriorities, tasksAPI, TaskStatuses, TaskType, UpdateTaskModelType} from "../../api/todolist-api";
-import {addTodolist, changeTodolistEntityStatus, removeTodolist, setTodos} from "./todoListReducer";
+import {asyncActions, changeTodolistEntityStatus} from "./todoListReducer";
 import {handleServerAppError, handleServerNetworkError} from "../../utils/error-utils";
-import {setAppStatus} from "../../app/app-reduser";
+import {setAppStatus} from "../../app/appReduser";
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {AppRootStateType} from "../../app/store";
 
@@ -88,14 +88,14 @@ export const slice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(addTodolist, (state, action) => {
+            .addCase(asyncActions.createTodolist.fulfilled, (state, action) => {
                 state[action.payload.todolist.id] = []
             })
-            .addCase(removeTodolist, (state, action) => {
+            .addCase(asyncActions.removeTodolist.fulfilled, (state, action) => {
                 delete state[action.payload.todolistId]
             })
-            .addCase(setTodos, (state, action) => {
-                action.payload.todos.forEach((tl: any) => state[tl.id] = [])
+            .addCase(asyncActions.fetchTodolist.fulfilled, (state, action) => {
+                action.payload.todolists.forEach((tl: any) => state[tl.id] = []);
             })
             .addCase(fetchTasks.fulfilled, (state, action) => {
                 state[action.payload.todolistId] = action.payload.tasks

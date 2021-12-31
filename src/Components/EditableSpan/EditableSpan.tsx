@@ -19,7 +19,7 @@ export const EditableSpan = React.memo(function (props: EditableSpanPropsType) {
     }
 
     const keyActivateMode = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.charCode === 13) {
+        if (e.key === "Enter") {
             activateViewMode();
         }
     }

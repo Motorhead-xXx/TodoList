@@ -1,6 +1,6 @@
 import {createTask, removeTask, tasksReducer, TasksStateType, updateTask} from "../TodolistsList/tasksReducer";
 import {TaskPriorities, TaskStatuses} from "../../api/todolist-api";
-import {addTodolist, removeTodolist} from "../TodolistsList/todoListReducer";
+import {asyncActions, removeTodolist} from "../TodolistsList/todoListReducer";
 
 
 let startState: TasksStateType
@@ -98,14 +98,15 @@ test('title of specified task should be changed', () => {
 
 //Add Todolist key
 test('new array should be added when new todolist is added', () => {
-    const action = addTodolist({
+    let payload = {
         todolist: {
             id: "new todolist",
             title: 'What to learn',
             addedDate: '',
             order: 0
         }
-    });
+    };
+    const action = asyncActions.createTodolist.fulfilled(payload, 'requestId', payload.todolist.title)
 
 
     const endState = tasksReducer(startState, action)
@@ -121,8 +122,7 @@ test('new array should be added when new todolist is added', () => {
 
 //Delete todolist
 test('property with todolistId should be deleted', () => {
-
-    const action = removeTodolist({todolistId: "todolistId2"});
+    const action = removeTodolist.fulfilled({todolistId: 'todolistId2'}, 'requestId', 'todolistId2');
     const endState = tasksReducer(startState, action)
     const keys = Object.keys(endState);
 
